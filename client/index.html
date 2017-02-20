@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://npmcdn.com/babel-core@5.8.38/browser.min.js"></script>
+    <script type="text/babel" >
+        "use strict";
+        let socket;
+        
+        const init = (e) => {
+            socket = io.connect();
+            setupSocket();
+        };
+        window.onload = init;
+        
+        const setupSocket = (e) => {
+             socket.on('connect', () => {
+                socket.emit('join', null);
+            });
+            
+            socket.on('updateClient', (data) => {
+                const newValue = data.value;
+                document.querySelector("#myPara").innerHTML = "<p>Current Value: "+newValue+"</p>";
+                
+            });
+            
+            socket.on('clearPara', (data) => {
+                document.querySelector("#myPara").innerHTML = "";
+            }); 
+        };
+        
+        const sendMessage = (e) => {
+            socket.emit('updatePara', null);
+        };
+        
+        setInterval(sendMessage, 3000);
+        
+        
+        
+    
+    </script>
+</head>
+<body>
+    <p id="myPara"></p>
+</body>
+</html>
